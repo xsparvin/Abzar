@@ -1,243 +1,1031 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=5" />
   <title>Sub → Config Generator</title>
   <style>
-    :root{
-      --bg:#0b1020; --card:#0f1724; --muted:#98a0b3; --accent:#7c5cff;
-      --glass: rgba(255,255,255,0.04);
-      --radius:16px;
-      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    :root {
+      --bg: #0b1020;
+      --card: #151c2f;
+      --muted: #aeb9cf;
+      --accent: #5c7cff;
+      --accent-hover: #4a6cf7;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --glass: rgba(255, 255, 255, 0.06);
+      --radius: 16px;
+      --shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+      --border: 1px solid rgba(255, 255, 255, 0.05);
+      font-family: 'Inter', "Segoe UI", Tahoma, Arial, sans-serif;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0}
-    body{
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent),
-                  radial-gradient(900px 400px at 90% 90%, rgba(0,200,255,0.05), transparent),
-                  var(--bg);
-      color:#e6eef8;
-      display:flex;align-items:center;justify-content:center;padding:24px;
+    
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .container{
-      width:100%;max-width:820px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:20px;padding:20px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter: blur(6px);
-      border:1px solid rgba(255,255,255,0.03);
-      display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start;
+    
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
     }
-    h1{margin:0 0 6px 0;font-size:20px}
-    p.lead{margin:0;color:var(--muted);font-size:13px}
-
-    /* left */
-    .left{padding:8px}
-    input[type=text], textarea{width:100%;padding:12px;border-radius:12px;border:none;background:var(--card);color:inherit;resize:vertical}
-    .controls{display:flex;gap:8px;margin-top:12px}
-    button{cursor:pointer;padding:10px 12px;border-radius:12px;border:none;background:var(--accent);color:white;font-weight:600}
-    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
-
-    /* right */
-    .right{padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);border-radius:12px}
-    .card{background:var(--glass);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-    .output{height:380px;overflow:auto;white-space:pre-wrap;font-family:monospace;font-size:13px;padding:10px;margin-top:10px;border-radius:10px;background:rgba(2,6,23,0.4)}
-    .row{display:flex;gap:8px;align-items:center}
-
-    .small{font-size:12px;color:var(--muted)}
-    .tag{background:rgba(255,255,255,0.04);padding:6px 8px;border-radius:8px;font-size:12px}
-
-    footer{grid-column:1/-1;margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
-
-    /* toast */
-    .toast{position:fixed;right:24px;bottom:24px;background:#111827;padding:12px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 6px 20px rgba(2,6,23,0.6);color:#e6eef8;display:none}
-
-    @media(max-width:880px){.container{grid-template-columns:1fr;}.right{order:2}.left{order:1}}
+    
+    body {
+      background: 
+        radial-gradient(1000px 500px at 10% 10%, rgba(92, 124, 255, 0.15), transparent),
+        radial-gradient(700px 350px at 90% 90%, rgba(0, 255, 255, 0.08), transparent),
+        var(--bg);
+      color: #e6eef8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 920px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      border: var(--border);
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: start;
+      position: relative;
+    }
+    
+    h1 {
+      margin: 0 0 12px 0;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.2;
+      background: linear-gradient(90deg, #e6eef8, #aeb9cf);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    p.lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    
+    /* Left Panel */
+    .left {
+      padding: 0;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e6eef8;
+    }
+    
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: var(--border);
+      background: var(--card);
+      color: inherit;
+      resize: vertical;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      font-size: 15px;
+    }
+    
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(92, 124, 255, 0.15);
+    }
+    
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .input-group input {
+      flex: 1;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      cursor: pointer;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      flex-shrink: 0;
+    }
+    
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    button.ghost {
+      background: transparent;
+      border: var(--border);
+      color: var(--muted);
+      font-weight: 600;
+    }
+    
+    button.ghost:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+    
+    /* Right Panel */
+    .right {
+      padding: 20px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      border-radius: 18px;
+      border: var(--border);
+      position: sticky;
+      top: 24px;
+    }
+    
+    .card {
+      background: var(--glass);
+      padding: 20px;
+      border-radius: 16px;
+      border: var(--border);
+    }
+    
+    .output {
+      height: 420px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      padding: 16px;
+      margin-top: 16px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: var(--border);
+      line-height: 1.5;
+      tab-size: 2;
+    }
+    
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    
+    .tag {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* Filter Card */
+    .filter-card h4 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 16px;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .filter-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .filter-group input[type="text"] {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      flex: 1;
+    }
+    
+    .filter-group button {
+      padding: 12px 16px;
+      font-size: 14px;
+      min-height: 44px;
+    }
+    
+    footer {
+      grid-column: 1 / -1;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      padding-top: 20px;
+      border-top: var(--border);
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      background: #1e293b;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: var(--border);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+      color: #e6eef8;
+      display: none;
+      z-index: 1000;
+      font-weight: 500;
+      max-width: 300px;
+      word-break: break-word;
+      animation: toastSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes toastSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Logo Section */
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), #00e6ff);
+      box-shadow: 0 0 15px rgba(92, 124, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 24px;
+      color: white;
+      flex-shrink: 0;
+    }
+    
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--accent);
+      animation: spin 0.8s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    /* Utility Classes */
+    .mt-1 { margin-top: 8px; }
+    .mt-2 { margin-top: 16px; }
+    .mt-3 { margin-top: 24px; }
+    .mb-1 { margin-bottom: 8px; }
+    .mb-2 { margin-bottom: 16px; }
+    
+    ul {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+    
+    li {
+      margin-bottom: 6px;
+    }
+    
+    /* MOBILE STYLES - کاملا بهینه شده */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+        align-items: flex-start;
+        min-height: auto;
+        overflow-y: auto;
+      }
+      
+      .container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 18px;
+        max-width: 100%;
+        border-radius: 20px;
+      }
+      
+      .right {
+        position: static;
+        order: 2;
+      }
+      
+      .left {
+        order: 1;
+      }
+      
+      h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+      
+      p.lead {
+        font-size: 14px;
+      }
+      
+      .input-group {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .input-group #paste {
+        width: 100%;
+        padding: 14px;
+      }
+      
+      .controls {
+        gap: 8px;
+        margin-top: 16px;
+      }
+      
+      .controls button {
+        flex: 1 0 calc(50% - 8px);
+        min-width: 0;
+        padding: 14px 12px;
+        font-size: 14px;
+      }
+      
+      .output {
+        height: 340px;
+        font-size: 12.5px;
+        padding: 14px;
+      }
+      
+      .right {
+        padding: 18px;
+      }
+      
+      .logo-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+      }
+      
+      .logo {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+      }
+      
+      .filter-group {
+        flex-direction: column;
+      }
+      
+      .filter-group input[type="text"] {
+        width: 100%;
+      }
+      
+      .filter-group button {
+        width: 100%;
+      }
+      
+      .tag {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+      
+      button {
+        min-height: 44px;
+      }
+      
+      footer {
+        margin-top: 16px;
+        padding-top: 16px;
+        font-size: 13px;
+      }
+      
+      .toast {
+        right: 10px;
+        left: 10px;
+        bottom: 10px;
+        max-width: none;
+        text-align: center;
+      }
+    }
+    
+    /* برای صفحات بسیار کوچک */
+    @media (max-width: 480px) {
+      .container {
+        padding: 16px;
+        gap: 16px;
+      }
+      
+      h1 {
+        font-size: 20px;
+      }
+      
+      .controls button {
+        flex: 1 0 100%;
+      }
+      
+      .output {
+        height: 280px;
+      }
+      
+      .logo-section > div:last-child {
+        text-align: center;
+      }
+      
+      .row {
+        justify-content: center;
+        gap: 8px;
+      }
+    }
+    
+    /* حالت تاریک/روشن (آماده برای افزودن) */
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --muted: #64748b;
+        --accent: #4f46e5;
+        --accent-hover: #4338ca;
+        --glass: rgba(0, 0, 0, 0.03);
+        --border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+      
+      body {
+        color: #1e293b;
+      }
+      
+      .output {
+        background: rgba(0, 0, 0, 0.04);
+      }
+      
+      .tag {
+        background: rgba(0, 0, 0, 0.06);
+        color: #1e293b;
+      }
+      
+      button.ghost {
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+    
+    /* اسکرول بار سفارشی */
+    .output::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .output::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+    
+    .output::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+    
+    .output::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="left">
-      <h1>Subscription → Config</h1>
-      <p class="lead">لینک ساب رو اینجا بذار — فایل رو می‌خونه، دیکود می‌کنه و خروجی رو تمیز نمایش می‌ده.</p>
+      <h1>Subscription → Config Decoder</h1>
+      <p class="lead">Paste your subscription link here — it will fetch the file, decode it, and display the clean output.</p>
 
-      <label class="small" style="margin-top:12px;display:block">لینک ساب</label>
-      <input id="sub" type="text" placeholder="مثال: https://.../sub.txt یا vmess://..." />
+      <label class="small mt-2">Subscription Link / Raw Config</label>
+      <div class="input-group">
+        <input id="sub" type="text" placeholder="e.g., https://.../sub.txt or vmess://..." />
+        <button id="paste" class="ghost" style="flex-shrink:0">📋 Paste</button>
+      </div>
 
       <div class="controls">
-        <button id="gen">Generate</button>
-        <button id="copy" class="ghost">Copy All</button>
-        <button id="download" class="ghost">Download .txt</button>
+        <button id="gen">🚀 Generate</button>
+        <button id="copy" class="ghost">📄 Copy All</button>
+        <button id="download" class="ghost">💾 Download .txt</button>
+        <button onclick="clearAll()" class="ghost">🗑️ Clear</button>
       </div>
 
-      <div style="margin-top:12px" class="card">
+      <div class="card mt-3">
         <div class="row">
-          <div class="tag">Auto-detect: <span id="detected" style="margin-left:8px">—</span></div>
+          <div class="tag">Detected Type: <span id="detected" style="font-weight:700">—</span></div>
           <div style="flex:1"></div>
-          <div class="small">Base64 ⇄ Plain</div>
+          <div class="small">Base64 ⇄ Plain Text</div>
         </div>
 
-        <textarea id="output" class="output" placeholder="Configs will appear here..."></textarea>
+        <textarea id="output" class="output" placeholder="Configs will appear here..." readonly></textarea>
+        
+        <div class="row mt-2">
+          <div class="small" style="flex: 1">Lines: <span id="lineCount">0</span></div>
+          <div class="small">Chars: <span id="charCount">0</span></div>
+        </div>
       </div>
-
     </div>
 
     <div class="right">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:60px;height:60px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#00d0ff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px">SUB</div>
+      <div class="logo-section">
+        <div class="logo">SUB</div>
         <div>
-          <div style="font-weight:700">Sub → Config Generator</div>
-          <div class="small">نسخهٔ ارتقا یافته — شامل دکمه کپی، دانلود و UI بهتر</div>
+          <div style="font-weight:700;font-size:16px">Config Decoder Tool</div>
+          <div class="small">Enhanced version with copy, download, and better UI.</div>
         </div>
       </div>
 
-      <div style="margin-top:14px" class="card">
-        <div class="small">یادداشت‌ها</div>
-        <ul class="small" style="margin:8px 0 0 18px;padding:0">
-          <li>اگر لینک ساب مستقیم نباشه، می‌تونی vmess/vless/trojan/trojan-ws هم بذاری.</li>
-          <li>برای بهترین نتیجه از لینک مستقیم یا متن Base64 استفاده کن.</li>
+      <div class="card filter-card">
+        <h4>🔧 Utility Actions</h4>
+        <div class="controls" style="margin-top: 12px;">
+          <button onclick="pretty()" class="ghost">🛠️ Format JSON</button>
+          <button onclick="reverseBase64()" class="ghost">↕️ Reverse Base64</button>
+        </div>
+      </div>
+
+      <div class="card filter-card mt-2">
+        <h4>🔍 Filtering</h4>
+        <div class="filter-group">
+          <input id="filterText" type="text" placeholder="e.g., V2Ray or IRAN" />
+          <button onclick="applyFilter()">Apply Filter</button>
+        </div>
+        <ul class="small">
+          <li>Enter a keyword to filter lines in the output</li>
+          <li>Leave empty and apply to reset filter</li>
+          <li>*Supports case-insensitive matching</li>
         </ul>
       </div>
 
-      <div style="margin-top:12px;text-align:center" class="card">
-        <div class="small">عملیات سریع</div>
-        <div style="margin-top:8px;display:flex;gap:8px">
-          <button onclick="pretty()" class="ghost">Show Pretty</button>
-          <button onclick="clearAll()" class="ghost">Clear</button>
-        </div>
+      <div class="card mt-2">
+        <h4 style="font-size: 15px; margin-bottom: 10px;">📝 Notes</h4>
+        <ul class="small">
+          <li>Supports direct subscription <strong>URLs</strong> or raw configurations</li>
+          <li>Formats: vmess://, vless://, trojan://, ss://</li>
+          <li>For best results, use a direct URL or Base64 encoded content</li>
+          <li>Press Ctrl+Enter in input to generate quickly</li>
+        </ul>
       </div>
     </div>
 
-    <footer>نیاز به تغییر یا فیلتر خاص داری؟ بگو تا اضافه کنم ✨</footer>
+    <footer>Need a specific change or filter? Let me know to add it! ✨</footer>
   </div>
 
-  <div id="toast" class="toast">کپی شد!</div>
+  <div id="toast" class="toast"></div>
 
   <script>
+    // عناصر DOM
     const subEl = document.getElementById('sub');
     const outEl = document.getElementById('output');
     const detected = document.getElementById('detected');
     const toast = document.getElementById('toast');
-
-    function showToast(msg='کپی شد!'){
-      toast.textContent = msg; toast.style.display='block';
-      setTimeout(()=>toast.style.display='none',1500);
-    }
-
-    function isBase64(str){
-      try{
-        // quick check: length%4===0 and only base64 chars
-        if(!str || str.length%4>0) return false;
-        return /^[A-Za-z0-9+\/=\n\r]+$/.test(str);
-      }catch(e){return false}
-    }
-
-    function tryDecode(text){
-      // remove whitespace
-      const t = text.replace(/\s+/g,'');
-      try{
-        return atob(t);
-      }catch(e){return null}
-    }
-
-    function detectType(text){
-      if(!text) return '—';
-      const t = text.trim();
-      if(t.startsWith('vmess://')) return 'vmess (raw)';
-      if(t.startsWith('vless://')) return 'vless (raw)';
-      if(t.startsWith('trojan://')) return 'trojan (raw)';
-      if(isBase64(t)){
-        const dec = tryDecode(t);
-        if(dec){
-          if(dec.trim().startsWith('{') || dec.trim().startsWith('[')) return 'JSON (base64)';
-          if(dec.trim().startsWith('vmess://')) return 'vmess (base64)';
-          return 'Base64 (decoded)';
-        }
-        return 'Base64(?)';
+    const lineCountEl = document.getElementById('lineCount');
+    const charCountEl = document.getElementById('charCount');
+    
+    // وضعیت برنامه
+    let originalContent = '';
+    let isFiltered = false;
+    
+    // نمایش اعلان
+    function showToast(msg, type = 'info') {
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      
+      // رنگ‌بندی بر اساس نوع
+      if (type === 'success') {
+        toast.style.background = '#10b981';
+      } else if (type === 'error') {
+        toast.style.background = '#ef4444';
+      } else if (type === 'warning') {
+        toast.style.background = '#f59e0b';
+      } else {
+        toast.style.background = '#1e293b';
       }
-      return 'Plain text';
+      
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2500);
     }
-
-    async function fetchSubURL(url){
-      const res = await fetch(url, {cache:'no-store'});
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      return await res.text();
+    
+    // بررسی Base64
+    function isBase64(str) {
+      if (!str || typeof str !== 'string') return false;
+      const t = str.replace(/\s+/g, '').trim();
+      if (t.length % 4 !== 0) return false;
+      try {
+        // Check if it's valid base64 and can be decoded
+        const decoded = atob(t);
+        // Check if re-encoding gives the same result (extra validation)
+        return btoa(decoded) === t;
+      } catch (e) {
+        return false;
+      }
     }
-
-    async function generate(){
+    
+    // رمزگشایی Base64 با کنترل خطا
+    function tryDecode(text) {
+      const t = text.replace(/\s+/g, '');
+      try {
+        return atob(t);
+      } catch (e) {
+        return null;
+      }
+    }
+    
+    // رمزگذاری Base64 با کنترل خطا
+    function tryEncode(text) {
+      try {
+        return btoa(text);
+      } catch (e) {
+        return null;
+      }
+    }
+    
+    // تشخیص نوع محتوا
+    function detectType(text) {
+      if (!text) return '—';
+      const t = text.trim();
+      
+      // بررسی پروتکل‌های خام
+      if (t.startsWith('vmess://')) return 'VMess (Raw)';
+      if (t.startsWith('vless://')) return 'VLESS (Raw)';
+      if (t.startsWith('trojan://')) return 'Trojan (Raw)';
+      if (t.startsWith('ss://')) return 'Shadowsocks (Raw)';
+      
+      // بررسی Base64 و محتوای رمزگشایی شده
+      if (isBase64(t)) {
+        const dec = tryDecode(t);
+        if (dec) {
+          const d = dec.trim();
+          if (d.startsWith('{') || d.startsWith('[')) return 'JSON (Base64)';
+          if (d.startsWith('vmess://') || d.startsWith('vless://') || 
+              d.startsWith('trojan://') || d.startsWith('ss://')) {
+            return 'Config List (Base64)';
+          }
+          return 'Base64 Encoded Text';
+        }
+        return 'Base64 String';
+      }
+      return 'Plain Text';
+    }
+    
+    // آپدیت شمارشگر خط و کاراکتر
+    function updateCounters(content) {
+      if (!content) {
+        lineCountEl.textContent = '0';
+        charCountEl.textContent = '0';
+        return;
+      }
+      
+      const lines = content.split('\n').filter(line => line.trim().length > 0);
+      lineCountEl.textContent = lines.length;
+      charCountEl.textContent = content.length;
+    }
+    
+    // دریافت URL
+    async function fetchSubURL(url) {
+      try {
+        // بررسی URL
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          throw new Error('Invalid URL. Must start with http:// or https://');
+        }
+        
+        // نمایش وضعیت بارگذاری
+        const originalButtonText = document.getElementById('gen').innerHTML;
+        document.getElementById('gen').innerHTML = '<span class="spinner"></span> Fetching...';
+        document.getElementById('gen').disabled = true;
+        
+        const res = await fetch(url, { 
+          cache: 'no-store',
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          }
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP Status: ${res.status} ${res.statusText}`);
+        }
+        
+        const text = await res.text();
+        
+        // بازگرداندن دکمه به حالت عادی
+        document.getElementById('gen').innerHTML = originalButtonText;
+        document.getElementById('gen').disabled = false;
+        
+        return text;
+      } catch (error) {
+        // بازگرداندن دکمه به حالت عادی در صورت خطا
+        document.getElementById('gen').innerHTML = '🚀 Generate';
+        document.getElementById('gen').disabled = false;
+        throw error;
+      }
+    }
+    
+    // پردازش چندخطی
+    function processMultiLineContent(content) {
+      const lines = content.split(/\r?\n/).filter(l => l.trim());
+      if (lines.length <= 1) return content;
+      
+      let decodedCount = 0;
+      const processedLines = lines.map(line => {
+        if (isBase64(line)) {
+          const decoded = tryDecode(line);
+          if (decoded) {
+            decodedCount++;
+            return decoded;
+          }
+        }
+        return line;
+      });
+      
+      // اگر حداقل یک خط رمزگشایی شده باشد، نتیجه را برمی‌گردانیم
+      if (decodedCount > 0) {
+        return processedLines.join('\n');
+      }
+      
+      return content;
+    }
+    
+    // تولید خروجی
+    async function generate() {
       const val = subEl.value.trim();
-      if(!val){outEl.value='';detected.textContent='—';return}
-
+      if (!val) {
+        outEl.value = '';
+        detected.textContent = '—';
+        updateCounters('');
+        showToast('Please enter a subscription URL or config', 'warning');
+        return;
+      }
+      
       let content = val;
-      try{
-        if(/^https?:\/\//i.test(val)){
-          outEl.value='Loading...';
+      outEl.value = '⏳ Loading... Please wait.';
+      detected.textContent = 'Working...';
+      isFiltered = false;
+      
+      try {
+        // 1. دریافت از URL اگر شبیه لینک باشد
+        if (/^https?:\/\//i.test(val)) {
           content = await fetchSubURL(val);
         }
-
-        // try to detect and decode base64
-        if(isBase64(content)){
+        
+        // 2. ذخیره محتوای اصلی
+        originalContent = content;
+        
+        // 3. تلاش برای رمزگشایی کل محتوا به عنوان Base64
+        if (isBase64(content)) {
           const dec = tryDecode(content);
-          if(dec) { outEl.value = dec; detected.textContent = detectType(content); return; }
+          if (dec) {
+            outEl.value = dec;
+            detected.textContent = detectType(content);
+            updateCounters(dec);
+            showToast('Successfully decoded Base64 content', 'success');
+            return;
+          }
         }
-
-        // if content itself contains many base64 lines, try decode each line
-        const lines = content.split(/\r?\n/).filter(l=>l.trim());
-        if(lines.length>1){
-          const decodedLines = lines.map(l=>{
-            if(isBase64(l)){
-              const d = tryDecode(l);
-              return d?d:l;
-            }
-            return l;
-          }).join('\n');
-          outEl.value = decodedLines; detected.textContent = detectType(decodedLines);
+        
+        // 4. پردازش محتوای چندخطی
+        const processedContent = processMultiLineContent(content);
+        if (processedContent !== content) {
+          outEl.value = processedContent;
+          detected.textContent = 'Multi-line Decoded';
+          updateCounters(processedContent);
+          showToast(`Decoded ${content.split(/\r?\n/).filter(l => isBase64(l)).length} Base64 lines`, 'success');
           return;
         }
-
-        outEl.value = content; detected.textContent = detectType(content);
-      }catch(err){
-        outEl.value = 'خطا در دریافت ساب: '+err.message;
-        detected.textContent = 'خطا';
+        
+        // 5. پیش‌فرض: نمایش محتوای اصلی
+        outEl.value = content;
+        detected.textContent = detectType(content);
+        updateCounters(content);
+        showToast('Content processed successfully', 'success');
+        
+      } catch (err) {
+        console.error('Error:', err);
+        outEl.value = `❌ Error: ${err.message}\n\nPlease check the URL or config format and try again.`;
+        detected.textContent = 'Error';
+        updateCounters('');
+        showToast(`Error: ${err.message}`, 'error');
       }
     }
-
+    
+    // رویدادهای دکمه‌ها
     document.getElementById('gen').addEventListener('click', generate);
-
-    document.getElementById('copy').addEventListener('click', async ()=>{
-      try{
+    
+    document.getElementById('copy').addEventListener('click', async () => {
+      if (!outEl.value.trim()) {
+        showToast('Output is empty', 'warning');
+        return;
+      }
+      
+      try {
         await navigator.clipboard.writeText(outEl.value);
-        showToast('کپی شد');
-      }catch(e){
-        // fallback
-        outEl.select(); document.execCommand('copy'); showToast('کپی شد');
+        showToast('Copied to clipboard!', 'success');
+      } catch (e) {
+        // Fallback برای مرورگرهای قدیمی
+        outEl.select();
+        document.execCommand('copy');
+        showToast('Copied to clipboard!', 'success');
       }
     });
-
-    document.getElementById('download').addEventListener('click', ()=>{
-      const blob = new Blob([outEl.value || ''], {type:'text/plain;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'configs.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    
+    document.getElementById('paste').addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        subEl.value = text;
+        showToast('Text pasted to input', 'success');
+        // تولید خودکار پس از Paste (اختیاری)
+        // generate();
+      } catch (e) {
+        showToast('Cannot access clipboard. Please paste manually.', 'error');
+      }
     });
-
-    function pretty(){
-      // a simple pretty: if JSON, format it
+    
+    document.getElementById('download').addEventListener('click', () => {
+      if (!outEl.value.trim()) {
+        showToast('Output is empty', 'warning');
+        return;
+      }
+      
+      const blob = new Blob([outEl.value || ''], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `decoded_configs_${new Date().getTime()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('File downloaded successfully', 'success');
+    });
+    
+    // فرمت JSON
+    function pretty() {
       let txt = outEl.value.trim();
-      if(!txt) return showToast('خالیه');
-      try{
+      if (!txt) {
+        showToast('Output is empty', 'warning');
+        return;
+      }
+      
+      try {
         const j = JSON.parse(txt);
-        outEl.value = JSON.stringify(j,null,2);
-        showToast('JSON formatted');
-      }catch(e){
-        showToast('هیچ قالب JSON ای پیدا نشد');
+        outEl.value = JSON.stringify(j, null, 2);
+        detected.textContent = 'JSON Formatted';
+        updateCounters(outEl.value);
+        showToast('JSON formatted successfully', 'success');
+      } catch (e) {
+        showToast('No valid JSON detected', 'error');
       }
     }
-
-    function clearAll(){ subEl.value=''; outEl.value=''; detected.textContent='—'; }
-
-    // keyboard: ctrl+enter to generate
-    subEl.addEventListener('keydown', (e)=>{ if((e.ctrlKey || e.metaKey) && e.key==='Enter'){ generate(); } });
-
-    // on load: if there's an example, populate
-    // subEl.value = '';
+    
+    // معکوس Base64
+    function reverseBase64() {
+      let txt = outEl.value.trim();
+      if (!txt) {
+        showToast('Output is empty', 'warning');
+        return;
+      }
+      
+      const encoded = tryEncode(txt);
+      if (encoded) {
+        outEl.value = encoded;
+        detected.textContent = 'Plain Text → Base64';
+        updateCounters(encoded);
+        showToast('Content successfully Base64 encoded', 'success');
+      } else {
+        showToast('Failed to Base64 encode content', 'error');
+      }
+    }
+    
+    // اعمال فیلتر
+    function applyFilter() {
+      const filter = document.getElementById('filterText').value.trim().toLowerCase();
+      
+      if (!originalContent) {
+        showToast('Generate configs first', 'warning');
+        return;
+      }
+      
+      if (!filter) {
+        // بازگرداندن محتوای اصلی
+        outEl.value = originalContent;
+        isFiltered = false;
+        detected.textContent = detectType(originalContent);
+        updateCounters(originalContent);
+        showToast('Filter cleared', 'success');
+        return;
+      }
+      
+      const originalLines = originalContent.split(/\r?\n/);
+      const filteredLines = originalLines.filter(line => 
+        line.toLowerCase().includes(filter)
+      );
+      
+      outEl.value = filteredLines.join('\n');
+      isFiltered = true;
+      detected.textContent = `Filtered (${filteredLines.length}/${originalLines.length})`;
+      updateCounters(outEl.value);
+      
+      if (filteredLines.length === 0) {
+        showToast('No lines match your filter', 'warning');
+      } else {
+        showToast(`Filtered ${filteredLines.length} lines`, 'success');
+      }
+    }
+    
+    // پاک کردن همه
+    function clearAll() {
+      subEl.value = '';
+      outEl.value = '';
+      detected.textContent = '—';
+      originalContent = '';
+      isFiltered = false;
+      document.getElementById('filterText').value = '';
+      updateCounters('');
+      showToast('All fields cleared', 'success');
+    }
+    
+    // میانبر صفحه‌کلید: Ctrl+Enter برای تولید
+    subEl.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        generate();
+      }
+    });
+    
+    // آپدیت شمارشگرها هنگام تغییر محتوا
+    outEl.addEventListener('input', () => {
+      updateCounters(outEl.value);
+    });
+    
+    // مقداردهی اولیه
+    updateCounters('');
+    
+    // بارگذاری نمونه در صورت نیاز (اختیاری)
+    // window.addEventListener('load', () => {
+    //   subEl.placeholder = "Try: vmess://eyJ2IjoiMiIsInBzIjoiVGVzdCIsImFkZCI6ImV4YW1wbGUuY29tIiwicG9ydCI6IjQ0MyIsImlkIjoiMTIzNCJ9Cg==";
+    // });
   </script>
 </body>
 </html>
