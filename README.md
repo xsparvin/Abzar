@@ -1,50 +1,133 @@
-<h1 align="center">🔮 Abzar — Ultimate Web Tools Framework</h1>
+# 🚀 SUB Config Decoder — God Mode
 
-<p align="center">
-  <b>یک فریمورک فوق‌سبک و مدرن برای ساخت ابزارهای تحت وب، ژنراتورها، کانورترها و صفحات کاربردی</b><br>
-  <sub>Fast. Clean. Beautiful.</sub>
-</p>
+یک ابزار **قدرتمند، سریع و کاملاً سمت‌کلاینت** برای تبدیل، Decode و مدیریت Subscriptionهای VPN  
+بدون نیاز به بک‌اند، بدون لاگ، بدون دردسر 😎
 
 ---
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Made%20With-HTML5-orange?style=for-the-badge">
-  <img src="https://img.shields.io/github/stars/xsparvin/Abzar?style=for-the-badge">
-  <img src="https://img.shields.io/github/forks/xsparvin/Abzar?style=for-the-badge">
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge">
-</p>
+## ✨ Features
+
+### 🔓 Smart Decode
+- Auto Decode Base64
+- Decode لینک‌های چندخطی
+- پشتیبانی از:
+  - `vmess://`
+  - `vless://`
+  - `trojan://`
+  - `ss://`
+
+### 🧠 VMESS Decoder واقعی
+- تبدیل VMESS Base64 → JSON خوانا
+- نمایش نام سرور، آدرس، پورت، TLS و UUID
+
+### 🔍 Live Search & Filter
+- فیلتر زنده بدون دکمه Apply
+- جستجو روی کل خروجی
+
+### 🗂️ Protocol Tabs
+- فیلتر سریع بر اساس:
+  - VMESS
+  - VLESS
+  - Trojan
+  - Shadowsocks
+
+### 📊 Config Counter
+نمایش تعداد هر پروتکل:
+### 📦 Export Options
+- 📄 TXT
+- 📦 JSON
+- 🧩 Clash Meta (Basic)
+
+### 🌙 Dark / ☀️ Light Mode
+- ذخیره تنظیمات در LocalStorage
+- سوییچ سریع با یک کلیک
+
+### 🕘 History
+- ذخیره ۵ ورودی آخر
+- کلیک = Load مجدد
+- بدون ارسال دیتا به هیچ سروری
+
+### 📱 Responsive Design
+- موبایل
+- تبلت
+- دسکتاپ
+- کاملاً بهینه
 
 ---
 
-## 🚀 Abzar چیست؟
+## 🛡️ Privacy & Security
 
-**Abzar** یک ساختار تمیز و بهینه برای ساخت ابزارهای تحت وب است.  
-اگر قصد دارید:
-
-- ابزار تبدیل بسازید  
-- یک ژنراتور آنلاین طراحی کنید  
-- ابزاری برای تحلیل، تبدیل، شبکه، API، JSON و… بسازید  
-- وب‌اپ سبک و سریع توسعه دهید  
-
-… Abzar بهترین نقطه شروع است.
-
-🎯 بدون فریمورک  
-🎯 بدون وابستگی  
-🎯 بسیار سریع، تمیز و قابل‌گسترش  
+- ❌ بدون بک‌اند
+- ❌ بدون لاگ
+- ❌ بدون ارسال اطلاعات
+- ✅ همه چیز داخل مرورگر شما اجرا می‌شود
 
 ---
 
-## ✨ ویژگی‌ها
+## 🧰 How To Use
 
-- ⚡ **فوق‌سبک و سریع**  
-- 🎨 **طراحی تمیز و مدرن**  
-- 📱 **کاملا ریسپانسیو**  
-- 🧩 **قابل توسعه برای ابزارهای مختلف**  
-- 🚀 **کاملاً سازگار با GitHub Pages**  
-- 🔌 آماده برای افزودن CSS / JS  
-- 📦 ساختار حرفه‌ای مثل پروژه‌های بزرگ  
+1. فایل `index.html` را دانلود کن
+2. داخل مرورگر باز کن
+3. یکی از این‌ها را Paste کن:
+   - لینک Subscription
+   - Base64
+   - کانفیگ خام
+4. روی **Generate** بزن
+5. فیلتر کن، کپی بگیر یا Export کن 😎
 
 ---
 
-## 📂 ساختار پروژه
+## 🖥 Supported Browsers
+
+- Chrome ✅
+- Firefox ✅
+- Edge ✅
+- Brave ✅
+- Safari ✅
+
+---
+
+## ⚙ Tech Stack
+
+- HTML5
+- CSS3 (Responsive + Dark Mode)
+- Vanilla JavaScript
+- No Dependencies
+- No Frameworks
+
+---
+
+## 🧩 Roadmap (Next Features)
+
+- [ ] Sing-box Export
+- [ ] Clash Meta Full Support
+- [ ] PWA (Installable)
+- [ ] GeoIP + Country Flag
+- [ ] Speed Test (Ping Estimation)
+- [ ] Config Tag Generator
+
+---
+
+## 🤝 Contributing
+
+Pull Request آزاد 😍  
+ایده داری؟ Issue بزن  
+باگ دیدی؟ Report کن
+
+---
+
+## ⭐ Star This Repo
+
+اگر این ابزار به کارت اومد، یه ⭐ بده  
+این باعث میشه پروژه زنده بمونه ❤️
+
+---
+
+## 📄 License
+
+MIT License  
+Use it freely, modify it, share it.
+
+---
+
+**Made with ❤️ for power users**
